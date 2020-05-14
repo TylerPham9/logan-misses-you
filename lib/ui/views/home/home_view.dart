@@ -1,17 +1,15 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:path_provider/path_provider.dart';
-
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'package:image_picker/image_picker.dart';
-import 'home_viewmodel.dart';
-
-import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stacked/stacked.dart';
+
+import 'home_viewmodel.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -19,8 +17,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  // File _image;
-  bool _opacity = false;
   GlobalKey _globalKey = new GlobalKey();
 
   var status = Permission.camera.status;
@@ -65,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         IconButton(
           icon: Icon(Icons.file_download),
-          onPressed: () => _capturePng,
+          onPressed: () => _capturePng(),
         ),
       ],
     );
@@ -123,132 +119,6 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
         ),
-
-        // ! ORIGINAL
-        // body: SafeArea(
-        //   child: RepaintBoundary(
-        //     key: _globalKey,
-        //     child: MatrixGestureDetector(
-        //       clipChild: true,
-
-        //       // TODO: Make the base image transparent when update is being made
-        //       onMatrixUpdate: (m, tm, sm, rm) {
-        //         model.onMatrixUpdate(MatrixGestureDetector.compose(
-        //             model.transformMatrix.value, tm, sm, rm));
-        //         // m = Matrix4.identity();
-        //       },
-        //       child: Stack(
-        //         children: [
-        //           AnimatedBuilder(
-        //             animation: model.transformMatrix,
-        //             builder: (context, child) {
-        //               return Transform(
-        //                 alignment: FractionalOffset.center,
-        //                 transform: model.transformMatrix.value,
-        //                 child: model.image,
-        //               );
-        //             },
-        //           ),
-        //           IgnorePointer(
-        //             ignoring: false,
-        //             child: Container(
-        //               width: MediaQuery.of(context).size.width,
-        //               height: MediaQuery.of(context).size.height,
-        //               child: FittedBox(
-        //                 child: Image(
-        //                   image: AssetImage('assets/images/base.png'),
-        //                   color: Color.fromRGBO(255, 255, 255, 1.0),
-        //                   colorBlendMode: BlendMode.modulate,
-        //                 ),
-        //                 fit: BoxFit.fill,
-        //               ),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-
-        // body: Center(
-        //   child: GestureDetector(
-
-        //     onScaleUpdate: (ScaleUpdateDetails details) {
-        //       model.onScaleUpdate(details);
-        //     },
-        //     onScaleStart: (ScaleStartDetails details) {
-        //       model.onScaleStart();
-        //     },
-        //     onScaleEnd: (ScaleEndDetails details) => {model.onScaleEnd()},
-
-        //     // onScaleStart: true
-        //     //     ? (ScaleStartDetails details) {
-        //     //         model.updatePreviousScale();
-        //     //       }
-        //     //     : null,
-        //     // onScaleUpdate: true
-        //     //     ? (ScaleUpdateDetails details) {
-        //     //         model.updateScale(details.scale);
-        //     //       }
-        //     //     : null,
-        //     // onScaleEnd: true
-        //     //     ? (ScaleEndDetails details) {
-        //     //         model.clearScale();
-        //     //       }
-        //     //     : null,
-        //     // onPanUpdate: true
-        //     //     ? (tapInfo) {
-        //     //         model.updatePosition(tapInfo.delta.dx, tapInfo.delta.dy);
-        //     //       }
-        //     //     : null,
-        //     child: RepaintBoundary(
-        //       key: _globalKey,
-        //       child: Stack(
-        //         children: [
-        //           model.image,
-        //           // Positioned(
-        //           //   top: yPosition,
-        //           //   left: xPosition,
-        //           //   child: _image == null
-        //           //       ? Text('No image selected.')
-        //           //       : Transform(
-        //           //           transform: Matrix4.diagonal3(
-        //           //               new Vector3(scale, scale, scale)),
-        //           //           alignment: FractionalOffset.center,
-        //           //           child: Image.file(_image)),
-        //           // ),
-        //           // FittedBox(
-        //           //   child: Image(
-        //           //     image: AssetImage('assets/images/base.png'),
-        //           //   ),
-        //           //   fit: BoxFit.fill,
-        //           // ),
-        //           // Text(model.title),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // body: MatrixGestureDetector(
-        //   onMatrixUpdate: (m, tm, sm, rm) {
-        //     notifier.value = m;
-        //   },
-        //   child: AnimatedBuilder(
-        //       animation: notifier,
-        //       builder: (context, child) {
-        //         return Transform(
-        //           transform: notifier.value,
-        //           child: Image(
-        //             image: AssetImage('assets/images/base.png'),
-        //           ),
-        //         );
-        //       }),
-
-        // Center(
-        //   child: Image(
-        //     image: AssetImage('assets/images/base.png'),
-        //   ),
-        // ),
       ),
       viewModelBuilder: () => HomeViewModel(),
     );
