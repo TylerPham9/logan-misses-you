@@ -19,7 +19,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   GlobalKey _globalKey = new GlobalKey();
 
-  var status = Permission.camera.status;
   @override
   void initState() {
     super.initState();
@@ -42,39 +41,20 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Row bottomAppBarWithIcons(HomeViewModel model) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          icon: Icon(Icons.add_a_photo),
-          onPressed: () => model.updateImage(ImageSource.camera),
-        ),
-        IconButton(
-          icon: Icon(Icons.collections),
-          onPressed: () => model.updateImage(ImageSource.gallery),
-        ),
-        IconButton(
-          icon: Icon(Icons.refresh),
-          onPressed: () => model.resetMatrix(),
-        ),
-        IconButton(
-          icon: Icon(Icons.file_download),
-          onPressed: () => _capturePng(),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.blueGrey,
-        bottomNavigationBar: BottomAppBar(child: bottomAppBarWithIcons(model)),
-
-        // Testing multiple Gestures
+        bottomNavigationBar: BottomAppBar(
+          child: CustomBottomAppBar(
+            updateImageFromCamera: () => model.updateImage(ImageSource.camera),
+            updateImageFromGallery: () =>
+                model.updateImage(ImageSource.gallery),
+            resetPositon: () => model.resetMatrix(),
+            captureImage: () => _capturePng(),
+          ),
+        ),
         body: SafeArea(
           child: RepaintBoundary(
             key: _globalKey,
@@ -83,21 +63,22 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 MatrixGestureDetector(
                   // TODO: Make the base image transparent when update is being made
-
                   onMatrixUpdate: (m, tm, sm, rm) {
                     model.onMatrixUpdate(tm, sm, rm);
-                    // model.onMatrixUpdate(MatrixGestureDetector.compose(
-                    //     model.transformMatrix.value, tm, sm, rm));
                   },
-                  child: AnimatedBuilder(
-                    animation: model.transformMatrix,
-                    builder: (context, child) {
-                      return Transform(
-                        // alignment: FractionalOffset.center,
-                        transform: model.transformMatrix.value,
-                        child: model.image,
-                      );
-                    },
+                  child: Container(
+                    // alignment: Alignment.bottomCenter,
+                    // width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: AnimatedBuilder(
+                      animation: model.transformMatrix,
+                      builder: (context, child) {
+                        return Transform(
+                          transform: model.transformMatrix.value,
+                          child: model.image,
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Container(
@@ -108,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
                       ignoring: true,
                       child: Image(
                         image: AssetImage('assets/images/base.png'),
-                        color: Color.fromRGBO(255, 255, 255, 1.0),
+                        color: Color.fromRGBO(255, 255, 255, 1),
                         colorBlendMode: BlendMode.modulate,
                       ),
                     ),
@@ -121,6 +102,47 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       viewModelBuilder: () => HomeViewModel(),
+    );
+  }
+}
+
+class CustomBottomAppBar extends StatelessWidget {
+  final Function updateImageFromCamera;
+  final Function updateImageFromGallery;
+  final Function resetPositon;
+  final Function captureImage;
+
+  const CustomBottomAppBar({
+    Key key,
+    this.updateImageFromCamera,
+    this.updateImageFromGallery,
+    this.resetPositon,
+    this.captureImage,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: Icon(Icons.add_a_photo),
+          onPressed: updateImageFromCamera,
+        ),
+        IconButton(
+          icon: Icon(Icons.collections),
+          onPressed: updateImageFromGallery,
+        ),
+        IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: resetPositon,
+        ),
+        IconButton(
+          icon: Icon(Icons.file_download),
+          onPressed: captureImage,
+        ),
+      ],
     );
   }
 }
