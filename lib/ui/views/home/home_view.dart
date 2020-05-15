@@ -25,11 +25,13 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _capturePng() async {
+    // TODO: display a toast message where the file is saved
     if (await Permission.storage.request().isGranted) {
       try {
         RenderRepaintBoundary boundary =
             _globalKey.currentContext.findRenderObject();
         ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+        // TODO: Add gif/video capabilities
         ByteData byteData =
             await image.toByteData(format: ui.ImageByteFormat.png);
         Uint8List pngBytes = byteData.buffer.asUint8List();
@@ -67,9 +69,8 @@ class _HomeViewState extends State<HomeView> {
                     model.onMatrixUpdate(tm, sm, rm);
                   },
                   child: Container(
-                    // alignment: Alignment.bottomCenter,
-                    // width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height / 2,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.8,
                     child: AnimatedBuilder(
                       animation: model.transformMatrix,
                       builder: (context, child) {
