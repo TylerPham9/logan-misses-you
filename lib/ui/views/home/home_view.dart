@@ -11,21 +11,30 @@ import 'package:stacked/stacked.dart';
 
 import 'home_viewmodel.dart';
 
+const colorDodgerBlue = Color(0xFF1D90F3);
+const colorYellow = Color(0xFFFFFE03);
+
 class HomeView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _capturePng() async {
-    // TODO: display a toast message where the file is saved
+  _displaySnackBar(BuildContext context, String text) {
+    // TODO: Make it clickable and open gallery
+    final snackBar = SnackBar(content: Text('Image saved to $text'));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  void _capturePng(BuildContext context) async {
     if (await Permission.storage.request().isGranted) {
       try {
         RenderRepaintBoundary boundary =
@@ -36,7 +45,8 @@ class _HomeViewState extends State<HomeView> {
             await image.toByteData(format: ui.ImageByteFormat.png);
         Uint8List pngBytes = byteData.buffer.asUint8List();
 
-        await ImageGallerySaver.saveImage(pngBytes);
+        String result = await ImageGallerySaver.saveImage(pngBytes);
+        _displaySnackBar(context, result);
       } catch (e) {
         print(e);
       }
@@ -47,14 +57,16 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.grey,
         bottomNavigationBar: BottomAppBar(
+          color: colorDodgerBlue,
           child: CustomBottomAppBar(
             updateImageFromCamera: () => model.updateImage(ImageSource.camera),
             updateImageFromGallery: () =>
                 model.updateImage(ImageSource.gallery),
             resetPositon: () => model.resetMatrix(),
-            captureImage: () => _capturePng(),
+            captureImage: () => _capturePng(context),
           ),
         ),
         body: SafeArea(
@@ -127,19 +139,31 @@ class CustomBottomAppBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         IconButton(
-          icon: Icon(Icons.add_a_photo),
+          icon: Icon(
+            Icons.add_a_photo,
+            color: colorYellow,
+          ),
           onPressed: updateImageFromCamera,
         ),
         IconButton(
-          icon: Icon(Icons.collections),
+          icon: Icon(
+            Icons.collections,
+            color: colorYellow,
+          ),
           onPressed: updateImageFromGallery,
         ),
         IconButton(
-          icon: Icon(Icons.refresh),
+          icon: Icon(
+            Icons.refresh,
+            color: colorYellow,
+          ),
           onPressed: resetPositon,
         ),
         IconButton(
-          icon: Icon(Icons.file_download),
+          icon: Icon(
+            Icons.file_download,
+            color: colorYellow,
+          ),
           onPressed: captureImage,
         ),
       ],
