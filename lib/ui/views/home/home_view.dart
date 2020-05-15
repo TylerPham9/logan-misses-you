@@ -47,7 +47,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.grey,
         bottomNavigationBar: BottomAppBar(
           child: CustomBottomAppBar(
             updateImageFromCamera: () => model.updateImage(ImageSource.camera),
@@ -63,22 +63,25 @@ class _HomeViewState extends State<HomeView> {
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                MatrixGestureDetector(
-                  // TODO: Make the base image transparent when update is being made
-                  onMatrixUpdate: (m, tm, sm, rm) {
-                    model.onMatrixUpdate(tm, sm, rm);
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: AnimatedBuilder(
-                      animation: model.transformMatrix,
-                      builder: (context, child) {
-                        return Transform(
-                          transform: model.transformMatrix.value,
-                          child: model.image,
-                        );
-                      },
+                Listener(
+                  onPointerDown: (_) => model.onPointerDown(),
+                  onPointerUp: (_) => model.onPointerUp(),
+                  child: MatrixGestureDetector(
+                    onMatrixUpdate: (m, tm, sm, rm) {
+                      model.onMatrixUpdate(tm, sm, rm);
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: AnimatedBuilder(
+                        animation: model.transformMatrix,
+                        builder: (context, child) {
+                          return Transform(
+                            transform: model.transformMatrix.value,
+                            child: model.image,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -88,11 +91,7 @@ class _HomeViewState extends State<HomeView> {
                   child: FittedBox(
                     child: IgnorePointer(
                       ignoring: true,
-                      child: Image(
-                        image: AssetImage('assets/images/base.png'),
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        colorBlendMode: BlendMode.modulate,
-                      ),
+                      child: model.templateImage,
                     ),
                     fit: BoxFit.fill,
                   ),
