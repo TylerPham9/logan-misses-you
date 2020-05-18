@@ -1,12 +1,8 @@
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 
 import 'home_viewmodel.dart';
@@ -34,25 +30,6 @@ class _HomeViewState extends State<HomeView> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  void _capturePng(BuildContext context) async {
-    if (await Permission.storage.request().isGranted) {
-      try {
-        RenderRepaintBoundary boundary =
-            _globalKey.currentContext.findRenderObject();
-        ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-        // TODO: Add gif/video capabilities
-        ByteData byteData =
-            await image.toByteData(format: ui.ImageByteFormat.png);
-        Uint8List pngBytes = byteData.buffer.asUint8List();
-
-        String result = await ImageGallerySaver.saveImage(pngBytes);
-        _displaySnackBar(context, result);
-      } catch (e) {
-        print(e);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
@@ -66,7 +43,11 @@ class _HomeViewState extends State<HomeView> {
             updateImageFromGallery: () =>
                 model.updateImage(ImageSource.gallery),
             resetPositon: () => model.resetMatrix(),
-            captureImage: () => _capturePng(context),
+            captureImage: () async {
+              String filePath = await model
+                  .captureImage(_globalKey.currentContext.findRenderObject());
+              _displaySnackBar(context, filePath);
+            },
           ),
         ),
         body: SafeArea(
@@ -90,7 +71,7 @@ class _HomeViewState extends State<HomeView> {
                         builder: (context, child) {
                           return Transform(
                             transform: model.transformMatrix.value,
-                            child: model.image,
+                            child: model.userImage,
                           );
                         },
                       ),
@@ -107,6 +88,15 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     fit: BoxFit.fill,
                   ),
+                ),
+                Container(
+                  alignment: Alignment(0.0, 0.0),
+                  child: model.isBusy
+                      ? SpinKitRing(
+                          color: colorDodgerBlue,
+                          size: 100.0,
+                        )
+                      : null,
                 ),
               ],
             ),
