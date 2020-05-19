@@ -5,10 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:stacked/stacked.dart';
 
+import 'package:logan_misses_you/ui/shared/app_colors.dart';
 import 'home_viewmodel.dart';
-
-const colorDodgerBlue = Color(0xFF1D90F3);
-const colorYellow = Color(0xFFFFFE03);
 
 class HomeView extends StatefulWidget {
   @override
@@ -37,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
         key: _scaffoldKey,
         backgroundColor: Colors.grey,
         bottomNavigationBar: BottomAppBar(
-          color: colorDodgerBlue,
+          color: wolverineBlue,
           child: CustomBottomAppBar(
             updateImageFromCamera: () => model.updateImage(ImageSource.camera),
             updateImageFromGallery: () =>
@@ -93,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
                   alignment: Alignment(0.0, 0.0),
                   child: model.isBusy
                       ? SpinKitRing(
-                          color: colorDodgerBlue,
+                          color: wolverineBlue,
                           size: 100.0,
                         )
                       : null,
@@ -131,28 +129,28 @@ class CustomBottomAppBar extends StatelessWidget {
         IconButton(
           icon: Icon(
             Icons.add_a_photo,
-            color: colorYellow,
+            color: wolverineYellow,
           ),
           onPressed: updateImageFromCamera,
         ),
         IconButton(
           icon: Icon(
             Icons.collections,
-            color: colorYellow,
+            color: wolverineYellow,
           ),
           onPressed: updateImageFromGallery,
         ),
         IconButton(
           icon: Icon(
             Icons.refresh,
-            color: colorYellow,
+            color: wolverineYellow,
           ),
           onPressed: resetPositon,
         ),
         IconButton(
           icon: Icon(
             Icons.file_download,
-            color: colorYellow,
+            color: wolverineYellow,
           ),
           onPressed: captureImage,
         ),

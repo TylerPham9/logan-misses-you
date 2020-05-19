@@ -9,9 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
-
-const String templateImagePath = 'assets/images/base.png';
-const String placeholderImagePath = 'assets/images/image-placeholder.png';
+import 'package:logan_misses_you/ui/shared/constants.dart';
 
 class HomeViewModel extends BaseViewModel {
   // ? I don't want to use Value Notifier here
@@ -32,9 +30,29 @@ class HomeViewModel extends BaseViewModel {
 
   void updateImage(ImageSource source) async {
     // TODO: need error states
-    if (await Permission.camera.request().isGranted) {
-      File image = await ImagePicker.pickImage(source: source);
-      _userImage = Image.file(image);
+    try {
+      if (source == ImageSource.camera) {
+        if (await Permission.camera.request().isGranted) {
+          _getImageFromPicker(source);
+        }
+      } else {
+        if (await Permission.storage.request().isGranted) {
+          _getImageFromPicker(source);
+        }
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  void _getImageFromPicker(ImageSource source) async {
+    File newImage = await ImagePicker.pickImage(source: source);
+
+    // ImagePicker returns null if user presses back button
+    // only update image if user selects an image
+    if (newImage != null) {
+      _userImage = Image.file(newImage);
       resetMatrix();
     }
   }
