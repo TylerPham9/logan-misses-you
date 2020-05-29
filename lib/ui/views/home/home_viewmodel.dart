@@ -13,8 +13,9 @@ import 'package:logan_misses_you/services/matrix_gesture_service.dart';
 import 'package:logan_misses_you/services/media_service.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _mediaService = locator<MediaService>();
-  final _matrixGestureService = locator<MatrixGestureService>();
+  final MediaService _mediaService = locator<MediaService>();
+  final MatrixGestureService _matrixGestureService =
+      locator<MatrixGestureService>();
 
   // ? I don't want to use Value Notifier here
   ValueNotifier<Matrix4> _transformMatrix = ValueNotifier(Matrix4.identity());

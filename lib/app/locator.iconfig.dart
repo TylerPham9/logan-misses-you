@@ -12,13 +12,12 @@ import 'package:get_it/get_it.dart';
 
 void $initGetIt(GetIt g, {String environment}) {
   final thirdPartyServicesModule = _$ThirdPartyServicesModule();
+  g.registerLazySingleton<DialogService>(
+      () => thirdPartyServicesModule.dialogServices);
   g.registerLazySingleton<MatrixGestureService>(() => MatrixGestureService());
   g.registerLazySingleton<MediaService>(() => MediaService());
-
-  //Eager singletons must be registered in the right order
-  g.registerSingleton<DialogService>(thirdPartyServicesModule.dialogServices);
-  g.registerSingleton<NavigationService>(
-      thirdPartyServicesModule.navigationServices);
+  g.registerLazySingleton<NavigationService>(
+      () => thirdPartyServicesModule.navigationServices);
 }
 
 class _$ThirdPartyServicesModule extends ThirdPartyServicesModule {

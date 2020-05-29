@@ -5,9 +5,13 @@ import 'package:stacked_services/stacked_services.dart';
 
 import 'app/router.gr.dart';
 
-void main() {
-  setupLocator();
-  runApp(MyApp());
+Future<void> main() async {
+  try {
+    await setupLocator();
+    runApp(MyApp());
+  } catch (error) {
+    print('Locator setup has failed');
+  }
 }
 
 class MyApp extends StatelessWidget {

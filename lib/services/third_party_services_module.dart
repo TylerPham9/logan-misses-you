@@ -3,8 +3,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 @module
 abstract class ThirdPartyServicesModule {
-  @singleton
+  @lazySingleton
   NavigationService get navigationServices;
-  @singleton
+  @lazySingleton
   DialogService get dialogServices;
 }

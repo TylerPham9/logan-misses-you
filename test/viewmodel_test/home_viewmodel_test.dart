@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logan_misses_you/app/locator.dart';
 import 'package:logan_misses_you/ui/views/home/home_viewmodel.dart';
 
 void main() {
   group('Home ViewModel Tests', () {
     var homeViewModel;
     setUpAll(() {
+      setupLocator();
       homeViewModel = HomeViewModel();
     });
     test('Template image starts opaque', () {
