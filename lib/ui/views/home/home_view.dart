@@ -1,7 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:stacked/stacked.dart';
 
@@ -37,9 +36,8 @@ class _HomeViewState extends State<HomeView> {
         bottomNavigationBar: BottomAppBar(
           color: wolverineBlue,
           child: CustomBottomAppBar(
-            updateImageFromCamera: () => model.updateImage(ImageSource.camera),
-            updateImageFromGallery: () =>
-                model.updateImage(ImageSource.gallery),
+            updateImageFromCamera: () => model.updateImage(false),
+            updateImageFromGallery: () => model.updateImage(true),
             resetPositon: () => model.resetMatrix(),
             captureImage: () async {
               String filePath = await model

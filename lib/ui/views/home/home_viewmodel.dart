@@ -5,13 +5,18 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
+// import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
+import 'package:logan_misses_you/app/locator.dart';
 import 'package:logan_misses_you/ui/shared/constants.dart';
+import 'package:logan_misses_you/services/matrix_gesture_service.dart';
+import 'package:logan_misses_you/services/media_service.dart';
 
 class HomeViewModel extends BaseViewModel {
+  final _mediaService = locator<MediaService>();
+  final _matrixGestureService = locator<MatrixGestureService>();
+
   // ? I don't want to use Value Notifier here
   ValueNotifier<Matrix4> _transformMatrix = ValueNotifier(Matrix4.identity());
   bool _isInUse = false;
@@ -28,26 +33,27 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  void updateImage(ImageSource source) async {
-    // TODO: need error states
+  void updateImage(bool fromGallery) async {
+    // TODO: I dont like this conditional
     try {
-      if (source == ImageSource.camera) {
-        if (await Permission.camera.request().isGranted) {
-          _getImageFromPicker(source);
+      if (fromGallery) {
+        if (await Permission.storage.request().isGranted) {
+          _getImageFromPicker(fromGallery);
         }
       } else {
-        if (await Permission.storage.request().isGranted) {
-          _getImageFromPicker(source);
+        if (await Permission.camera.request().isGranted) {
+          _getImageFromPicker(fromGallery);
         }
       }
+      // TODO: need error states
     } catch (e) {
       print(e);
       throw e;
     }
   }
 
-  void _getImageFromPicker(ImageSource source) async {
-    File newImage = await ImagePicker.pickImage(source: source);
+  void _getImageFromPicker(bool fromGallery) async {
+    File newImage = await _mediaService.getImage(fromGallery: fromGallery);
 
     // ImagePicker returns null if user presses back button
     // only update image if user selects an image
@@ -62,8 +68,11 @@ class HomeViewModel extends BaseViewModel {
     Matrix4 scaleMatrix,
     Matrix4 rotationMatrix,
   ) {
-    _transformMatrix.value = MatrixGestureDetector.compose(
-        _transformMatrix.value, translationMatrix, scaleMatrix, rotationMatrix);
+    _transformMatrix.value = _matrixGestureService.composeMatrix(
+        transformMatrix: _transformMatrix.value,
+        translationMatrix: translationMatrix,
+        scaleMatrix: scaleMatrix,
+        rotationMatrix: rotationMatrix);
     notifyListeners();
   }
 
