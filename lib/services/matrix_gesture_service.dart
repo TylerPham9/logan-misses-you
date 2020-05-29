@@ -4,11 +4,6 @@ import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class MatrixGestureService {
-  // Future<File> getImage({bool fromGallery}) {
-  //   return ImagePicker.pickImage(
-  //       source: fromGallery ? ImageSource.gallery : ImageSource.camera);
-  // }
-
   Matrix4 composeMatrix({
     Matrix4 transformMatrix,
     Matrix4 translationMatrix,
