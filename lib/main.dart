@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logan_misses_you/app/locator.dart';
+import 'package:logan_misses_you/ui/shared/constants.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'app/router.gr.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Logan Misses You',
+      title: applicationName,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

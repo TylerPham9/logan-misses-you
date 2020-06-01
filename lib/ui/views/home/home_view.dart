@@ -5,6 +5,7 @@ import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:logan_misses_you/ui/shared/app_colors.dart';
+import 'package:logan_misses_you/ui/widgets/app_icon.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatefulWidget {
@@ -44,6 +45,7 @@ class _HomeViewState extends State<HomeView> {
                   .captureImage(_globalKey.currentContext.findRenderObject());
               _displaySnackBar(context, filePath);
             },
+            aboutDialog: () => model.showCustomAboutDialog(context),
           ),
         ),
         body: SafeArea(
@@ -109,6 +111,7 @@ class CustomBottomAppBar extends StatelessWidget {
   final Function updateImageFromGallery;
   final Function resetPositon;
   final Function captureImage;
+  final Function aboutDialog;
 
   const CustomBottomAppBar({
     Key key,
@@ -116,6 +119,7 @@ class CustomBottomAppBar extends StatelessWidget {
     this.updateImageFromGallery,
     this.resetPositon,
     this.captureImage,
+    this.aboutDialog,
   }) : super(key: key);
 
   @override
@@ -151,6 +155,13 @@ class CustomBottomAppBar extends StatelessWidget {
             color: wolverineYellow,
           ),
           onPressed: captureImage,
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.info_outline,
+            color: wolverineYellow,
+          ),
+          onPressed: aboutDialog,
         ),
       ],
     );

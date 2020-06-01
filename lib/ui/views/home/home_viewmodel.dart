@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:logan_misses_you/app/locator.dart';
 import 'package:logan_misses_you/ui/shared/constants.dart';
+import 'package:logan_misses_you/ui/widgets/app_icon.dart';
 import 'package:logan_misses_you/services/matrix_gesture_service.dart';
 import 'package:logan_misses_you/services/media_service.dart';
 
@@ -113,5 +114,29 @@ class HomeViewModel extends BaseViewModel {
       throw e;
     }
     return result;
+  }
+
+  void showCustomAboutDialog(BuildContext context) {
+    return showAboutDialog(
+      context: context,
+      applicationName: applicationName,
+      applicationVersion: '1.0.1',
+      applicationLegalese:
+          'This application has been approved for all audiences',
+      applicationIcon: AppIcon(),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: Text('Instructions'),
+        ),
+        Text('1. Upload images from your camera or image gallery'),
+        Text('2. Use two fingers to reposition your image'),
+        Text('3. Download and enjoy!'),
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text('Made with Flutter'),
+        ),
+      ],
+    );
   }
 }
