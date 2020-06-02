@@ -117,6 +117,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void showCustomAboutDialog(BuildContext context) {
+    final double _padding = 20.0;
     return showAboutDialog(
       context: context,
       applicationName: applicationName,
@@ -126,14 +127,14 @@ class HomeViewModel extends BaseViewModel {
       applicationIcon: AppIcon(),
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          padding: EdgeInsets.symmetric(vertical: _padding),
           child: Text('Instructions'),
         ),
         Text('1. Upload images from your camera or image gallery'),
         Text('2. Use two fingers to reposition your image'),
         Text('3. Download and enjoy!'),
         Padding(
-          padding: const EdgeInsets.only(top: 20.0),
+          padding: EdgeInsets.only(top: _padding),
           child: Text('Made with Flutter'),
         ),
       ],

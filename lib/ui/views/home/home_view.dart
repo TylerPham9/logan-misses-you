@@ -5,7 +5,6 @@ import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:logan_misses_you/ui/shared/app_colors.dart';
-import 'package:logan_misses_you/ui/widgets/app_icon.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatefulWidget {
